@@ -39,10 +39,13 @@ async function listenForBenficiaries(){
   console.log("100%")
   console.log("Unreleased Lockers Found: ",lockersToRelease.length)
 
-  lockersToRelease.forEach((locker)=>{
+  let nonce = await wallet.getTransactionCount()
+
+  lockersToRelease.forEach((locker,index)=>{
     signersContracts[locker.contractIndex].release(locker.address,locker.lockingId,{
       gasLimit: 50000,
-      gasPrice: ethers.utils.parseUnits(config.gasPriceGwei,'gwei')
+      gasPrice: ethers.utils.parseUnits(config.gasPriceGwei,'gwei'),
+      nonce:nonce+index
     }).then(()=>console.log("Sent Release TX for lockerId ",locker.lockingId))
   })
 }
